@@ -17,6 +17,10 @@ GRAY = (200, 200, 200)
 WHITE = (255, 255, 255)
 TEXT_COLOR = (100, 100, 100)
 
+text_input_active = False
+username_input = ""
+pw_input = ""
+
 title_font = pygame.font.Font(None, 36)
 text_font = pygame.font.Font(None, 36)
 
@@ -49,15 +53,36 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if user_login_box.rect.collidepoint(event.pos):
-                user_login_box.is_clicked("user")
+                text_input_active = True
+                user_login_box.is_clicked("user", True)
+                password_login_box.is_clicked("pw", False)
             elif password_login_box.rect.collidepoint(event.pos):
-                password_login_box.is_clicked("pw")
+                text_input_active = True
+                password_login_box.is_clicked("pw", True)
+                user_login_box.is_clicked("user", False)
             elif login_box.rect.collidepoint(event.pos):
-                login_box.is_clicked("login")
+                text_input_active = True
+                login_box.is_clicked("login", True)
             else:
                 print("invalid click")
+        elif event.type == pygame.KEYDOWN and text_input_active == True:
+            if event.key == pygame.K_RETURN:  # Finalize input on Enter
+                print(f"Username Input: {username_input}\nPassword Input: {pw_input}")
+                text_input_active = False
+                rect_color = GRAY
+            elif event.key == pygame.K_BACKSPACE:  # Remove last character
+                if user_login_box.is_clicked("user"):
+                    username_input = username_input[:-1]
+                elif password_login_box.is_clicked("pw"):
+                    pw_input = pw_input[:-1]
+                
+            else:  # Add character to input
+                if user_login_box.clicked:
+                    username_input += event.unicode
+                elif password_login_box.clicked:
+                    pw_input += event.unicode
     
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")

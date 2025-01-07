@@ -10,6 +10,7 @@ class Button:
         pygame.draw.rect(screen, self.bg_color, self.rect) # draw rectangle
         screen.blit(text_surface, text_rect) # Renders text and attaches to the rectangle
     
-    def is_clicked(self, text):
-        self.clicked = True
+    def is_clicked(self, text, bool):
+        self.clicked = bool
         print(f"{text} button clicked!")
+        return self.clicked
