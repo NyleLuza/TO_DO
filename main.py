@@ -39,35 +39,32 @@ while running:
     
     # 1st and 2nd param = x, y coordinates
     # 3rd and 4th param = size of rect 
-    rect = pygame.Rect(0, 0, 400, 400)
-    rect.center = (screen.get_width() // 2, screen.get_height() // 2)
     title_font = pygame.font.Font(None, 36)
-    title_text, title_rect = render_text("Login", title_font, TEXT_COLOR, center=(SCREEN_WIDTH // 2, 200))
+    title_text, title_rect = render_text("Login", title_font, TEXT_COLOR, center=(SCREEN_WIDTH // 2, 250))
 
-    user_login = pygame.Rect(700 - 250 // 2, 300 - 50 // 2, 250, 50)
-    # user_login.center = (700, 300)
+    screen.blit(title_text, title_rect)
+
+    user_login = pygame.Rect(700 - 250 // 2, 300, 250, 50)
     user_text_font = pygame.font.Font(None, 24)
-    user_text, user_text_rect = render_text("Username", text_font, TEXT_COLOR, center=(520, 300))
+    user_text, user_text_rect = render_text("Username", text_font, TEXT_COLOR, center=(520, 320))
 
-    pw_login = pygame.Rect(700 - 575 // 2, 360 - 275 // 2, 575, 275)
-    #pw_login.center = (700, 360)
+    pw_login = pygame.Rect(700 - 250 // 2, 360, 250, 50)
     pw_text_font = pygame.font.Font(None, 24)
-    pw_text, pw_text_rect = render_text("Password", text_font, TEXT_COLOR, center=(520, 360))
+    pw_text, pw_text_rect = render_text("Password", text_font, TEXT_COLOR, center=(520, 380))
 
-    login_button = pygame.Rect(850 - 575 // 2, 420 - 275 // 2, 575, 275)
-    #login_button.center = (850, 420)
-    login_button.width = 100
+    login_button = pygame.Rect(700 - 250 // 2, 420, 100, 50)
     login_text_font = pygame.font.Font(None, 24)
     login_text, login_text_rect = render_text("Login", text_font, TEXT_COLOR, center=login_button.center)
 
-    pygame.draw.rect(screen, 1, rect)
-    screen.blit(title_text, title_rect)
-    user_login_box = Button(user_login, "Username",text_font, TEXT_COLOR, GRAY)
-    # pygame.draw.rect(screen, (255, 255, 255), user_login)
+    user_login_box = Button(user_login, GRAY)
 
-    password_login_box = Button(pw_login, "Password", text_font, TEXT_COLOR, WHITE)
+    password_login_box = Button(pw_login, GRAY)
 
-    login_box = Button(login_button, "Login", text_font, TEXT_COLOR, GRAY)
+    login_box = Button(login_button, GRAY)
+
+    user_login_box.draw(screen, user_text, user_text_rect)
+    password_login_box.draw(screen, pw_text, pw_text_rect)
+    login_box.draw(screen, login_text, login_text_rect)
 
     """
     
