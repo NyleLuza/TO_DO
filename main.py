@@ -25,8 +25,6 @@ def render_text(text, font, color, center):
     text_rect = text_surface.get_rect(center=center)
     return text_surface, text_rect
 
-# fill the screen with a color to wipe away anything from last frame
-screen.fill("White")
 # 1st and 2nd param = x, y coordinates
 # 3rd and 4th param = size of rect 
 title_text, title_rect = render_text("TO-DO List", title_font, TEXT_COLOR, center=(SCREEN_WIDTH // 2, 250))
@@ -51,7 +49,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if user_login_box.rect.collidepoint(event.pos):
+                user_login_box.is_clicked("user")
+            elif password_login_box.rect.collidepoint(event.pos):
+                password_login_box.is_clicked("pw")
+            elif login_box.rect.collidepoint(event.pos):
+                login_box.is_clicked("login")
+            else:
+                print("invalid click")
     
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("White")
     screen.blit(title_text, title_rect)
 
     # drawing buttons to screen
