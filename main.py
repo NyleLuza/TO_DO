@@ -1,7 +1,8 @@
 """
 TODO:
-- Figure out how to create buttons
-- Figure out how to add user text input
+- Figure out hover functionality to show that the rectangle has been selected
+- Add the indicator to show that the box is ready for text
+- Add the input to be shown on the rectangle
 - Figure out where to store the input
 """
 
@@ -17,12 +18,15 @@ GRAY = (200, 200, 200)
 WHITE = (255, 255, 255)
 TEXT_COLOR = (100, 100, 100)
 
+title_font = pygame.font.Font(None, 36)
+text_font = pygame.font.Font(None, 24)
+
 text_input_active = False
 username_input = ""
+username_render = text_font.render(username_input, True, (0,0,0))
 pw_input = ""
+pw_render = text_font.render(pw_input, True, (0,0,0))
 
-title_font = pygame.font.Font(None, 36)
-text_font = pygame.font.Font(None, 36)
 
 def render_text(text, font, color, center):
     text_surface = font.render(text, True, color)
@@ -81,8 +85,12 @@ while running:
             else:  # Add character to input
                 if user_login_box.clicked:
                     username_input += event.unicode
+                    username_render = text_font.render(username_input, True, (0,0,0))
+
+                    
                 elif password_login_box.clicked:
                     pw_input += event.unicode
+                    pw_render = text_font.render(pw_input, True, (0,0,0))
     
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")
@@ -92,6 +100,10 @@ while running:
     user_login_box.draw(screen, user_text, user_text_rect)
     password_login_box.draw(screen, pw_text, pw_text_rect)
     login_box.draw(screen, login_text, login_text_rect)
+
+    # Displays user input to the screen (needs to be rendered after the text boxes are drawn for the text to be displayed)
+    screen.blit(username_render, username_render.get_rect(center = user_login.center))
+    screen.blit(pw_render, pw_render.get_rect(center = pw_login.center))
 
     # flip() the display to put your work on screen
     pygame.display.flip()
