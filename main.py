@@ -8,6 +8,7 @@ TODO:
 
 import pygame
 from ui_elements import Button
+from TextInputBox import TextInputBox
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -45,9 +46,12 @@ login_text, login_text_rect = render_text("Login", text_font, TEXT_COLOR, center
 user_login = pygame.Rect(700 - 250 // 2, 300, 250, 50)
 pw_login = pygame.Rect(700 - 250 // 2, 360, 250, 50)
 login_button = pygame.Rect(700 - 250 // 2, 420, 100, 50)
-# init of buttons
-user_login_box = Button(user_login, GRAY)
-password_login_box = Button(pw_login, GRAY)
+
+# init of text input boxes and set them to false since they are not active yet
+user_text_input_box = TextInputBox(user_login, GRAY, False)  
+pw_text_input_box = TextInputBox(pw_login, GRAY, False)
+
+# init buttons
 login_box = Button(login_button, GRAY)
 
 
@@ -58,37 +62,39 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if user_login_box.rect.collidepoint(event.pos):
-                text_input_active = True
-                user_login_box.is_clicked("user", True)
-                password_login_box.is_clicked("pw", False)
-            elif password_login_box.rect.collidepoint(event.pos):
-                text_input_active = True
-                password_login_box.is_clicked("pw", True)
-                user_login_box.is_clicked("user", False)
+            if user_text_input_box.rect.collidepoint(event.pos):
+                pw_text_input_box.set_active(False)
+                user_text_input_box.set_active(True)
+                """
+                user_text_input_box.is_clicked("user", True)
+                pw_text_input_box.is_clicked("pw", False)
+                """
+            elif pw_text_input_box.rect.collidepoint(event.pos):
+                user_text_input_box.set_active(False)
+                pw_text_input_box.set_active(True)
             elif login_box.rect.collidepoint(event.pos):
-                text_input_active = True
-                login_box.is_clicked("login", True)
+                username_input = ""
+                pw_input = ""
             else:
                 print("invalid click")
-        elif event.type == pygame.KEYDOWN and text_input_active == True:
-            if event.key == pygame.K_RETURN:  # Finalize input on Enter
+        elif event.type == pygame.KEYDOWN and (user_text_input_box.get_active() == True or pw_text_input_box.get_active() == True):
+            if user_text_input_box.get_active() and event.key == pygame.K_RETURN:  # Finalize input on Enter
                 print(f"Username Input: {username_input}\nPassword Input: {pw_input}")
-                text_input_active = False
-                rect_color = GRAY
+                username_input = ""
+                pw_input = ""
+                # rect_color = GRAY
             elif event.key == pygame.K_BACKSPACE:  # Remove last character
-                if user_login_box.is_clicked("user"):
+                if user_text_input_box.get_active() == True:
                     username_input = username_input[:-1]
-                elif password_login_box.is_clicked("pw"):
+                elif pw_text_input_box.get_active() == True:
                     pw_input = pw_input[:-1]
                 
             else:  # Add character to input
-                if user_login_box.clicked:
+                if user_text_input_box.get_active():
                     username_input += event.unicode
                     username_render = text_font.render(username_input, True, (0,0,0))
-
                     
-                elif password_login_box.clicked:
+                elif pw_text_input_box.get_active():
                     pw_input += event.unicode
                     pw_render = text_font.render(pw_input, True, (0,0,0))
     
@@ -97,8 +103,8 @@ while running:
     screen.blit(title_text, title_rect)
 
     # drawing buttons to screen
-    user_login_box.draw(screen, user_text, user_text_rect)
-    password_login_box.draw(screen, pw_text, pw_text_rect)
+    user_text_input_box.draw(screen, user_text, user_text_rect)
+    pw_text_input_box.draw(screen, pw_text, pw_text_rect)
     login_box.draw(screen, login_text, login_text_rect)
 
     # Displays user input to the screen (needs to be rendered after the text boxes are drawn for the text to be displayed)
